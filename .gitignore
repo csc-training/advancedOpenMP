@@ -1,0 +1,6 @@
+*.o
+*.a
+*.s
+results.csv
+*.out
+job
