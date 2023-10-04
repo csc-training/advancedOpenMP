@@ -1,0 +1,135 @@
+# Tasks with a linked list
+    
+## Background
+
+A pointer within a node is often used to link nodes serially, forming a linked list.  
+When multiple pointers are used in a node, a tree structure can be developed.  
+
+There is no simple way to parallelize "following the nodes" of a linked list. 
+However, if the nodes have independent work, the node pointers can be gathered
+and the work performed in parallel like this:
+```
+        n=0;
+        while(ptr){ ptr_list[n] = ptr->next; n++ }
+
+        #pragma omp parallel for
+        for(i=0;i<n;i++) {
+          foo(ptr_list[i]);
+        }
+```
+
+But the pointer list must be create (serially), and if there is an imbalance in
+foo executions, dynamic scheduling for EACH foo execution  may be needed to help 
+improve performance.
+
+In tasking, the chasing can be executed concurrently with work (foo) executions, 
+by including the chasing within a generator loop, like this:
+```
+        #pragma omp parallel
+        #pragma omp single
+        {
+           while(ptr){ 
+             #pragma omp task firstprivate(ptr)
+             foo(ptr);
+
+             ptr=ptr->next;
+           }
+        }
+```
+
+
+## Experiments
+
+READ the lnklst.c code!
+
+The object of lnklst.c is to begin printing node information 
+(as concurrent tasks), while following the pointer to each 
+sequentially linked node to extract the next node pointer (location).
+
+In the while loop the ptr variable is handed off to the task with
+a data-sharing attribute of firstprivate, so that at execution time
+it will have the value handed to it at generation time.
+
+1.) Exercise:
+
+    Fill in the details (at locations with a "...") in the lnklst.c code
+    to sequentially follow the linked list of nodes, creating a task for each 
+    node that  prints the thread number and node number.
+    Compute and run the lnklst.c code.  
+
+    <FIX  lnklst.c>
+```
+    cc -fopenmp lnklst.c 
+    export OMP_NUM_THREADS=4
+
+    ./a.out 
+```
+
+    try "./a.out | sort"  
+
+    1a.) Are the 4 threads expected to execute an equal number of tasks? _________(Y/N )
+    1b.) Note the format of the print statement.  Why is "0.3" used?
+          (Hint:  would a.out | sort work as expected if %3d were used?) 
+    1c.) Can you eliminate the task's firstprivate clause if you used:   _________(Y/N)
+            #pragma omp single firstprivate(ptr)
+
+    1d.) Is it OK to use master instead of single? ________________(Y/N)
+
+    1e.) Assume the code was extended to have code more code in the parallel region:
+
+```
+       x=0
+       #pragma omp parallel num_threads(2)
+       {
+         #pragma omp master OR single
+         {
+           #pragma omp task
+           {
+               x=1
+           }
+       
+         }
+
+        if(omp_get_thread_num()==0) printf("%d",x);  
+       }
+```
+
+    1f.) Is there a race condition at the print when a single construct is used?  ____(Y|N)
+    1g.) Is there a race condition at the print when a master construct is used?  ____(Y|N)
+    1h.) To fix a master construct race condition at the print, what directive
+         would you add immediately before the print statements?                   ________
+
+
+
+
+2.) Optional Exercise:
+    Change the code to do the following. Try it.  
+
+    struct node *ptr;
+    struct node *priv_ptr;
+    ...
+
+```
+       #pragma omp parallel private(priv_ptr)
+       #pragma omp single
+          while(ptr){
+             priv_ptr=ptr;
+             #pragma omp task
+             {
+               foo(priv_ptr);   // concurrent work
+             }
+
+             ptr = ptr->next;   // single thread
+                                // advances pointer serially
+          }
+       }
+```
+
+```
+     cp lnklst.c priv_ptr.c
+     <make changes, see above>
+     cc -fopenmp prv_ptr.c
+     ./a.out
+```
+
+    Why does foo pick up the correct priv_ptr value? Why?__________________________
