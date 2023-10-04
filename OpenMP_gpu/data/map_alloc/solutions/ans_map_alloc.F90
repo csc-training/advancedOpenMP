@@ -16,6 +16,6 @@ program main
 
    do i=1,n; if(y(i) /= 3) stop("y != 3"); enddo
 
-   print*, "Passed " _OPENMP
+   print*, "Passed ", _OPENMP
 
 end program
