@@ -8,14 +8,9 @@ float dotprod(float B[], float C[], int n)
    int k=9;
 // TODO 1a-c map B and C, make scalars tofrom by default
 //           and include a reduction if necessary
-   #pragma omp target teams map(to: B[0:n], C[0:n]) num_teams(104) \
-                            defaultmap(tofrom:scalar) reduction(+:sum)
-   {
-   #pragma omp distribute parallel for reduction(+:sum)
-   for (i=0; i<n; i++) sum += B[i] * C[i];
+  for (i=0; i<n; i++) sum += B[i] * C[i];
  
    k=omp_get_team_num();
-   }
 
    printf("i AF = %d, k= %d\n",i,k);
    return sum;
