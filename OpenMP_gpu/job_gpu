@@ -17,4 +17,4 @@ ml partition/G craype-accel-amd-gfx90a craype-x86-trento rocm
 export CRAY_ACC_DEBUG=2   # use 1 for less, or 3 for FULL
                           #                 to see everything!
 #rocprof ./a.out   #you can uncomment this line to have the profiler run your program and check some kernel execution parameters
-a.out
+./a.out
