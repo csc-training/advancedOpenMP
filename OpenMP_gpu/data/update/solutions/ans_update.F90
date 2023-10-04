@@ -14,10 +14,10 @@ contains
  end subroutine init
 
  function maybe_change_v1(v1) result(changed)
-    real    :: v1(*)
+    real    :: v1(:)
     logical :: changed
-    if(_OPENMP > 201511) then
-      v1(1)=1.0
+    if(_OPENMP .ge. 201511) then
+      v1(:)=1.0
       changed=.TRUE.
     else
       changed=.FALSE.
@@ -36,20 +36,26 @@ program main
    call init(v1, v2, p, N) 
 
 !! TODO 1: Beginning of structured data region "to" for v's, from for p
-!! !$omp target data map(to: v1[:N], v2[:N]) map(from: p[0:N])
-   !$omp target data map(to: v1, v2) map(from: p)
+   !$omp target data map(to: v1(:), v2(:)) map(tofrom: p(:))
 
       !$omp target
-      !$omp parallel do
+      !$omp simd
       do i = 1,N; p(i) = p(i) + (v1(i) * v2(i)); enddo
+!$omp end target
 
       changed = maybe_change_v1(v1); 
-      !! TODO 1: update just v1(0) conditionally
-      !$omp target update if(changed) to(v1(1:1))
+      !! TODO  update just v1(0) conditionally
+      !$omp target update if(changed) to(v1(:))
+
+!      if the compiler does not support if inside a pragma, you can always workaround with old school if
+!      if (changed) then
+!      !$omp target update to(v1(:))
+!      endif
 
       !$omp target
-      !$omp parallel do
+      !$omp simd
       do i = 1,N; p(i) = p(i) + (v1(i) * v2(i)); enddo
+!$omp end target
 
    !$omp end target data
 !! end TODO 1: end of structured data region
