@@ -19,7 +19,7 @@ ifeq ($(TACC_SYSTEM),ls6)
   endif
 endif
 
-a.out: main.o fun.o
+a.out: ans_main.o ans_fun.o
 	$(CPP) $(OMP_FLAG) $(OMP_TARG) $^ -o $@ 
 
 %.o: %.cpp
