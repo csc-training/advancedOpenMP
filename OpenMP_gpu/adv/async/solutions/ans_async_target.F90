@@ -23,7 +23,7 @@ program main
          !$omp end target
 
 !!TODO 1b: add nowait and depend(out:...) and appropriate map
-         !$omp target nowait depend(out:v2) map(from:v1)
+         !$omp target nowait depend(out:v2) map(from:v2)
          do i =1,N; v2(i)=2; enddo
          !$omp end target
 
