@@ -6,8 +6,6 @@ contains
       integer,intent(in)  :: v1(:),v2(:)
       integer,intent(out) :: v3(:)
       integer             :: i,n
-      !$omp  declare variant( p_vxv ) match( construct={parallel} )
-      !$omp  declare variant( t_vxv ) match( construct={target}   )
    
       n=size(v1)
       do i = 1,n; v3(i) = v1(i) * v2(i); enddo
@@ -20,7 +18,6 @@ contains
       integer             :: i,n
       n=size(v1)
    
-      !$omp do 
       do i = 1,n; v3(i) = v1(i) * v2(i) * 3; enddo
 
    end subroutine
@@ -29,10 +26,8 @@ contains
       integer,intent(in)  :: v1(:),v2(:)
       integer,intent(out) :: v3(:)
       integer             :: i,n
-      !$omp declare target
       n=size(v1)
    
-      !$omp distribute parallel for simd
       do i = 1,n; v3(i) = v1(i) * v2(i) * 2; enddo
 
    end subroutine
