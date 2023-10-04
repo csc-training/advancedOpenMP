@@ -6,13 +6,9 @@ function dotprod(B,C,N) result(sum)
    sum = 0.0e0
 !! TODO 1a-c map B and C, make scalars tofrom by default
 !!           and include a reduction if necessary
-   !$omp target teams map(to: B, C) reduction(+:sum) &
-   !$omp& defaultmap(tofrom:scalar)
-   !$omp distribute  parallel  do   reduction(+:sum)
       do i = 1,N
          sum = sum + B(i) * C(i)
       end do
-   !$omp end target teams
 end function
 
 ! Note:  The variable sum is now mapped with tofrom from the defaultmap

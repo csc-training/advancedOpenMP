@@ -8,7 +8,7 @@ function dotprod(B,C,N) result(sum)
 !!           and include a reduction if necessary
    !$omp target teams map(to: B, C) reduction(+:sum) &
    !$omp& defaultmap(tofrom:scalar)
-   !$omp distribute  parallel  do   reduction(+:sum)
+   !$omp distribute  simd reduction(+:sum)
       do i = 1,N
          sum = sum + B(i) * C(i)
       end do
