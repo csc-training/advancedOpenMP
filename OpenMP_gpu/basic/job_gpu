@@ -1,0 +1,17 @@
+#!/bin/bash -l
+#SBATCH -J basic_g        # Job name
+#SBATCH -o %x.o%j         # Name of stdout & stderr file
+#SBATCH -p dev-g          # Partition (queue) name
+#SBATCH -N 1              # one node
+#SBATCH -n 1              # tasks
+#SBATCH -t 00:05:00       # Run time (hh:mm:ss)
+#SBATCH -A project_462000390  # Project account for billing
+#SBATCH --gres=gpu:mi250:1
+#
+ml LUMI/23.03
+ml partition/G craype-accel-amd-gfx90a craype-x86-trento rocm
+
+export CRAY_ACC_DEBUG=2   # use 1 for less, or 3 for FULL
+                          #                 to see everything!
+# ADD CORRECT PROJECT ABOVE
+  ./a.out
