@@ -11,9 +11,7 @@ program main
    !! one thread executes the loop
    !! TODO 1: no map required for allocatable arrays
    !! TODO 2: Use array sections for last 1/2 of array
-   !$omp target
-      do i=1,n; y(i)=a*x(i)+y(i); enddo
-   !$omp end target
+   do i=1,n; y(i)=a*x(i)+y(i); enddo
 
 
    do i=1,n; if(y(i) /= 3) stop("y != 3"); enddo
