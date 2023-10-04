@@ -8,14 +8,12 @@ module data_A
 
       allocate(A(n))
 !! TODO 1:  insert a a target enter data construct here
-!     !$omp target enter data map(alloc:A)
 
     end subroutine init_A
 
     subroutine free_A()
 
 !! TODO 2:  insert a a target exit data construct here
-!     !$omp target exit data map(delete:A)
       deallocate(A)
 
     end subroutine free_A
@@ -27,14 +25,11 @@ program main
    call init_A(N)
 
 !! TODO 3:  offload with a target construct (no clauses)
-!  !$omp target
        do i = 1,N
          A(i)=1.0
        end do
-!  !$omp end target
 
 !! TODO 4:  use an update construct to get back from device
-!  !$omp udpate from(A)
 
    print*,A(1)
 
