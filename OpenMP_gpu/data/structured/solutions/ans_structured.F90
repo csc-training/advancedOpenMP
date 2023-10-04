@@ -5,20 +5,20 @@ program main   !unverified
 
   !! TODO 1c:  create a data region up to TODO end 1c
   !!           with minimum data motion
-   !omp target data map(alloc: x) map(from: y)
+   !$omp target data map(alloc: x) map(from: y)
 
      !! TODO 1a: offload without any mapping
-     !omp target
+     !$omp target
         do i=1,n; x(i)=1; y(i)=1; enddo
-     !omp end target
+     !$omp end target
   
      !! TODO 1b: offload without any mapping
-     !omp target
+     !$omp target
         do i=1,n; y(i)=a*x(i)+y(i); enddo
-     !omp end target
+     !$omp end target
 
    !! TODO end 1c:
-   !omp end target data
+   !$omp end target data
 
    do i=1,n; if(y(i) /= 3) stop("y != 3"); enddo
 
