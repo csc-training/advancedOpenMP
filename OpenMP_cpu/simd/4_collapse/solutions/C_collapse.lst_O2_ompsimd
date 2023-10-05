@@ -1,0 +1,43 @@
+Legend:
+
+  A - recognized idiom
+  D - deleted loop
+  I - callee inlined here
+  L - interleaved loop
+  M - multithreaded
+  P - peeled loop
+  S - distributed loop
+  U - completely unrolled loop
+  u - partially unrolled loop
+  V - vectorized loop
+  X - loop interchanged with enclosing loop
+  Z - versioned loop for LICM
+  + - additional messages below
+
+----------
+
+ 1.            #define M 4096
+ 2.            #define N    3
+ 3.            double a[M][N], b[M][N], c[M][N];
+ 4.            
+ 5.            void element_mXm(){
+ 6.            
+ 7.            // The two loops can be collapsed
+ 8. +   Vu--<>    #pragma omp simd collapse(2)
+ 9.               for (int j=0; j<M; j++) {
+10.                  for (int i=0; i<N; i++) {
+11. +                c[j][i] = c[j][i] + a[j][i] * b[j][i];
+12.                  }
+13.               }
+14.            }
+
+----------
+
+ 8. Cannot SLP vectorize list: vectorization was impossible with available vectorization factors
+ 8. loop not distributed: memory operations are safe for vectorization
+ 8. loop not distributed: use -Rpass-analysis=loop-distribute for more info
+ 8. the cost-model indicates that interleaving is not beneficial
+ 8. unrolled loop by a factor of 12
+ 8. vectorized loop (vectorization width: 2, interleaved count: 1)
+
+11. Cannot SLP vectorize list: vectorization was impossible with available vectorization factors

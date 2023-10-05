@@ -1,0 +1,8 @@
+https://goparallel.sourceforge.net/wp-content/uploads/2015/09/TheParallelUniverse_Issue_22-Feature1.pdf
+
+
+Q: Theoretically, how much faster should the vectorized loop execute?  It allows vectorization
+
+QUESTIONS: Answers
+          Theoretically, how much faster should the vectorized loop execute?  _____  Depends on # of vector lanes
+                                                                                     16 on Skylake nodes
