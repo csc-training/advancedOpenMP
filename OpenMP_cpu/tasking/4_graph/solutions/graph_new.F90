@@ -58,7 +58,7 @@ integer :: e
 end subroutine
 
 subroutine f5(a, b, c, e)
-integer :: a,b,c
+integer :: a,b,c,e
         if(a==0) print*,"Hmm" 
         b=9; c=9
         write(*,'("T5   IN_dep  a,e ",2i2,"   OUT_dep b,c  ",2i2)' ) a,e,b,c
