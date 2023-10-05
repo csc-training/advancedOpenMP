@@ -52,7 +52,7 @@ use data
 use omp_lib, only : omp_get_thread_num
 type(node) :: ptr
 
-   write(*, '( "thrd ",i2.2," executed node ",i3.3)' ) omp_get_thread_num(),ptr%x
+   write(*, '( "thrd ",i3.3," executed node ",i3.3)' ) omp_get_thread_num(),ptr%x
 
 end subroutine
 
