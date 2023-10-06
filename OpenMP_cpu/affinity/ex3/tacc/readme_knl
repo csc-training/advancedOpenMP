@@ -1,0 +1,39 @@
+* First experiment: 68 threads, 68 places, each place a core
+  ----------------
+
+      export OMP_NUM_THREADS=68
+      export OMP_PROC_BIND=spread
+
+      export OMP_PLACES=cores
+
+      amask_omp
+
+    1a.)  How many HWTs are set for each core for a prarticular thread-id
+
+
+
+* Second experiment: change the abstract name to threads
+  -----------------
+
+      export OMP_PLACES=threads
+
+      amask_omp
+
+    a.)  What is the difference between using
+         threads and cores as the abstract name?
+
+    b.) What would the results look like in view kernel mode?
+        If you don't know, extend your terminal to a width
+        of 286, and execute amask_omp -vk
+
+
+* Third  experiment: experiment with options
+  ----------------
+
+
+        amask_omp --help
+Execute amask_omp 
+Execute with -pf  (print fast)
+
+amask_omp   
+amask_omp  -pf

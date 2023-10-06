@@ -1,0 +1,62 @@
+* First experiment: 8 threads with 8 places; each place will use only 2 HW threads
+  ----------------
+
+export OMP_NUM_THREADS=8
+export OMP_PLACES='{0,68},{1,69},{2,70},{3,71},{4,72},{5,73},{6,74},{7,75}'
+export OMP_PROC_BIND=spread                  
+                                             
+                                         These are HardWare Thread (HWT) numbers
+                                         They are also called proc-ids.
+                                           |
+                                           v
+             '{0,68},{1,69},{2,70},{3,71},{4,72},{5,73},{6,74},{7,75}'
+              ^    ^
+              1st place.  Threads id 0 can run on 2 of the 4 HWTs
+
+              FYI:
+              The 4 HWT's of core 0 are 0,68,136,204.
+              The 4 HWT's of core 1 are 1,69,137,205.
+              The 4 HWT's of core 2 are 2,70,138,206.
+              The 4 HWT's of core 3 are 3,71,139,207.
+               ...
+               
+amask_omp -vk | cut -c 1-120
+amask_omp -vc                  #default for KNL
+
+   1a.) What is the difference between the views? (Hint: kernel and core)
+   1a.) How could you change the first place to allow a 
+        process to execute on 1st and 3rd HWT   Ans: {0,136}
+   1b.) What would you use for HWT-0, HWT-1, HWT-2, and HWT-3?  Ans:{0,68,136,204}
+
+
+
+* Second experiment: increase to 16 threads
+  -----------------
+export OMP_NUM_THREADS=16
+
+amask_omp 
+
+
+   2a.) What has happen in the distribution?
+   2b.) Is it round-robin? (Why not?)
+
+
+* Third experiment: use 12 threads
+  -----------------
+export OMP_NUM_THREADS=12
+amask_omp 
+
+   3a.) Would you expect this, knowning the results of 2a?
+
+
+* Fourth experiment:  explore OMP_DISPLAY_ENV
+  -----------------
+export OMP_NUM_THREADS=8
+export OMP_DISPLAY_ENV=1
+amask_omp 
+
+   4a.) What does DISPLAY_ENV do?
+   4b.) Set places to something incorrect, e.g.
+
+      e.g. use this incorrect syntax:
+      export OMP_PLACES='{0,68}{1,69}{2,70}{3,71}{4,72}{5,73}{6,74}{7,75}'

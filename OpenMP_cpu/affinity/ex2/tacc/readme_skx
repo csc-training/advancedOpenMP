@@ -1,0 +1,51 @@
+* First experiment: 8 threads with 8 places; each place is 2 HW threads
+  ----------------
+
+export OMP_NUM_THREADS=8
+export OMP_PLACES='{0,48},{1,49},{2,50},{3,51},{4,52},{5,53},{6,54},{7,55}'
+export OMP_PROC_BIND=spread                  
+                                             
+                                         These are HardWare Thread (HWT) numbers
+                                         They are also called proc-ids.
+                                           |
+                                           v
+            '{0,48},{1,49},{2,50},{3,51},{4,52},{5,53},{6,54},{7,55}'
+              ^  ^
+              1st place.  OpenMP Threads id 0 can run on either HWT
+              The 2 HWT's of core 0 are 0,48.
+              The 2 HWT's of core 1 are 1,49.
+              The 2 HWT's of core 2 are 2,50.
+              The 2 HWT's of core 3 are 3,51.
+               ...
+               
+amask_omp -vk 
+amask_omp -vc   #default for KNL
+
+   1a.) What is the difference between the views? (Hint: kernel and core)
+   1a.) How could you have written this in interval format?
+   1b.) What would you use for just the 2nd HWthread?                     Ans:{48}:8
+
+
+
+* Second experiment: increase to 16 threads
+  -----------------
+export OMP_NUM_THREADS=16
+
+amask_omp 
+
+   2a.) Are the places "oversubscribed".
+   2b.) What has happen in the distribution?
+   2c.) Is it round-robin? (Why not?)
+
+
+* Fourth experiment:  explore OMP_DISPLAY_ENV
+  -----------------
+export OMP_NUM_THREADS=8
+export OMP_DISPLAY_ENV=1
+amask_omp 
+
+   4a.) What does DISPLAY_ENV do?
+   4b.) Set places to something incorrect, e.g.
+
+      e.g. use this incorrect syntax (forgot to separate with commas):
+      export OMP_PLACES='{0,48}{1,49}{2,50}{3,51}{4,52}{5,53}{6,54}{7,55}'

@@ -1,0 +1,41 @@
+
+EXERCISE 1: Set up the parallel environment (affinity commands), 
+      execute amask_omp and 
+      answer questions
+
+* First experiment: Proc_Bind = close
+  ----------------
+
+          export OMP_NUM_THREADS=4
+          export OMP_PLACES='{0},{4},{8},{12},{16},{20},{24},{28}'
+          export OMP_PROC_BIND=close
+
+          amask_omp
+
+    a.) Does this system have HyperThreading? (yes|no)  _______ N
+        Use the lscpu command to find out.
+    b.) What proc-ids (core ids)  do the 4 thread land on?   ___ ___ ___ ___0,4,8,12
+       
+
+
+* Second experiment: Proc_Bind = spread
+  -----------------
+          export OMP_PROC_BIND=spread
+
+          amask_omp 
+
+    a.) What proc-ids do the 4 threads land on?   ___ ___ ___ ___ 0 8 16 24
+
+
+
+* Third experiment: Turn of OpenMP Affinity
+  -----------------
+
+
+          unset OMP_PLACES 
+          unset OMP_PROC_BIND
+          amask_omp
+
+     a.) What is the default affinity for each thread?   All mask bits set to 1
+
+

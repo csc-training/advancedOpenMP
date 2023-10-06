@@ -1,0 +1,17 @@
+export OMP_PLACES=cores
+export OMP_PROC_BIND=spread
+
+grep Phi /proc/cpuinfo >/dev/null
+if [[ $? = 0 ]]; then
+   #on KNL
+   export OMP_NUM_THREADS=17
+else
+   #on SKX
+      CPUS=`lscpu | grep '^CPU(s):'            | awk '{print $2}'`
+   THREADS=`lscpu | grep 'Thread(s) per core:' | awk '{print $4}'`
+   SOCKETS=`lscpu | grep 'Socket(s):'          | awk '{print $2}'`
+   CORES=$(( CPUS/THREADS ))
+   CORES_PER_SOCKET=$((CORES/SOCKETS))
+   export OMP_NUM_THREADS=$CORES_PER_SOCKET
+fi
+

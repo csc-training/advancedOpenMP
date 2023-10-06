@@ -1,0 +1,27 @@
+idevg() {
+   local N=1
+   local n=1
+   local cpt=56
+   local A=project_462000390
+   local p=dev-g
+   local t=00:30:00
+   local g=gpu:mi250:1
+          srun -N $N -n $n -A $A -p $p -t $t --gres=$g --cpus-per-task=$cpt --pty bash
+#  echo " srun -N $N -n $n -A $A -p $p -t $t --gres=$g --cpus-per-task=$cpt --pty bash"
+}
+idevc() {
+   local N=1
+   local n=1
+   local cpt=128
+   local A=project_462000390
+   local p=debug
+   local t=00:30:00
+          srun -N $N -n $n -A $A -p $p -t $t --cpus-per-task=$cpt --pty bash
+#  echo " srun -N $N -n $n -A $A -p $p -t $t --cpus-per-task=$cpt --pty bash"
+}
+
+
+mlg(){ ml LUMI/23.03; ml partition/G craype-accel-amd-gfx908 craype-x86-trento rocm; }
+mlc(){ ml LUMI/23.03; ml partition/C; }
+export PATH=/project/project_462000390/cpu_bin:$PATH
+export   PP=/project/project_462000390
