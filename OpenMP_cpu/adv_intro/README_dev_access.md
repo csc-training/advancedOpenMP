@@ -1,6 +1,6 @@
 #For these exercises you should use 1 nodes:
 
-## Use a "job" script for batch processing
+
 ## For interactive access:
 ```
         Frontera:   $ idev            -N 1 -tpn 56  For Tutorial Reservation
