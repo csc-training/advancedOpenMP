@@ -4,6 +4,13 @@
 On multi-device nodes, you can specify a device to
 perform the offload to, with the device clause.
 
+LUMI:
+IT IS IMPORTANT to allow use of 4 GPUs in the job scripts
+(or interacctive usage with:
+```
+    --gres=gpu:mi250:1
+```
+
 ## Exercises
 
 1.) Look over the code.

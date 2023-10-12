@@ -1,5 +1,5 @@
 #!/bin/bash -l
-#SBATCH -J basic_c        # Job name
+#SBATCH -J omp_cpu        # Job name
 #SBATCH -o %x.o%j         # Name of stdout & stderr file
 #SBATCH -p debug          # Partition (queue) name
 #SBATCH -N 1              # one node

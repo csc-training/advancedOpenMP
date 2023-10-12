@@ -1,6 +1,6 @@
 #!/bin/bash -l
-#SBATCH -J basic_g        # Job name
-#SBATCH -o %x.out%j         # Name of stdout & stderr file
+#SBATCH -J omp_gpu        # Job name
+#SBATCH -o %x.out%j       # Name of stdout & stderr file
 #SBATCH -p dev-g          # Partition (queue) name
 #SBATCH -N 1              # one node
 #SBATCH -n 1              # tasks
