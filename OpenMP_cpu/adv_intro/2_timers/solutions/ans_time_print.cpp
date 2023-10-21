@@ -5,8 +5,8 @@
 #include "timer.hpp"
 int main(){
 
-// TODO 1a: Instantiate a Timer class as timer.
-   Timer timer;
+// TODO 1a: Instantiate  a Timer_Collector class as timer.
+   Timer_Collector timer;
 
 // TODO 1b: Time a 1 second sleep
    timer.start(" 1 sec sleep ");

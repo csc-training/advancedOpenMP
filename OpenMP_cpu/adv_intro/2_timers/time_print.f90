@@ -4,7 +4,7 @@ include  "timer.f90"
 program main
 
 !! TODO 1a: Use the module in timer.f90 
-!!          and instantiate a type(cls_timer) class
+!!          and instantiate Timer_Collector (type) class as timer
   !use  ...
   !type(...) timer
 

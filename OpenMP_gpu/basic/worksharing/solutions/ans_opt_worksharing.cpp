@@ -1,10 +1,14 @@
+#include <cassert>
+#include <cmath>
+#include <iostream>
+using namespace std;
 
 // TODO 2: include timer.hpp here
 #include "timer.hpp"
 int main(void)
 {
-  int     N = 1<<28;
-//int     N = 1<<30;
+//int     N = 1<<28;
+  int     N = 1<<30;
   float x[N], y[N], a=2.0f; 
 
   // TODO 2: Instantiate timer object here 
@@ -22,6 +26,11 @@ int main(void)
   // TODO 2: Stop timer here and report resuls
   timer.stop();
   timer.print();
+
+  //Insert after axpy calculation
+  for (int i=0; i<N; i++)
+    assert( (fabs(y[i]-3.0f)) < 0.000001);
+  cout << " Passed Validation "<< endl;
 
   return 0;
 }

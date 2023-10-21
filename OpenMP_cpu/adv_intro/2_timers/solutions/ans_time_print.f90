@@ -4,9 +4,9 @@ include  "timer.f90"
 program main
 
 !! TODO 1a: Use the module in timer.f90 
-!!          and instantiate a type(cls_timer) class
-   use mod_timer
-   type(cls_timer) timer
+!!          and instantiate Timer_Collector (type) class as timer
+   use mod_Timer
+   type(Timer_Collector) timer
 
 !! TODO 1b: Time a 1 second sleep
    call timer%start(" 1 sec sleep ");
