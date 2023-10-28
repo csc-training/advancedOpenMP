@@ -3,21 +3,24 @@
 
 float dotprod(float B[], float C[], int n)
 {
-   float sum = 0.0f;
-   int i=9;
-   int k=9;
-// TODO 1a-c map B and C, make scalars tofrom by default
-//           and include a reduction if necessary
-   #pragma omp target teams map(to: B[0:n], C[0:n]) num_teams(104) \
-                            defaultmap(tofrom:scalar) reduction(+:sum)
-   {
-   #pragma omp distribute parallel for reduction(+:sum)
-   for (i=0; i<n; i++) sum += B[i] * C[i];
- 
-   k=omp_get_team_num();
+   float sum       = 0.0f;
+   int   sum_teams = 0;
+   int   got_teams = 0;
+
+// TODO 1a: map B and C and scalars as "tofrom"
+// TODO 1b-c include reductions for sum and sum_teams.
+   #pragma omp target teams num_teams(100) \
+                            map(to: B[0:n], C[0:n]) defaultmap(tofrom:scalar) \
+                            reduction(+:sum,sum_teams)
+   {      //TODO 1b
+      #pragma omp distribute parallel for reduction(+:sum)
+      for (int i=0; i<n; i++) sum += B[i] * C[i];
+
+      sum_teams+=1;
+      if(omp_get_team_num()==0) got_teams=omp_get_num_teams();
    }
 
-   printf("i AF = %d, k= %d\n",i,k);
+   printf("sum_teams = %d, got_teams = %d, sum = %f (n = %d)\n",sum_teams,got_teams,sum,n);
    return sum;
 }
 
@@ -27,12 +30,8 @@ int main(){
    for(int i=0; i<N; i++){B[i]=1.0f; C[i]=1.0f;}
 
    sum=dotprod(B,C,N);
-
-   printf("N= %d,  sum= %f\n", N,sum);
 }
-
-/* Note:  The variable sum is now mapped with tofrom from the defaultmap
-          clause on the combined target teams construct, for correct
-          execution with 4.5 (and pre-4.5) compliant compilers.
-          See Devices Intro. 
- */
+// Without defaultmap
+// #pragma omp target teams num_teams(100) \
+//                          map(to: B[0:n], C[0:n]) map(tofrom:got_teams) \
+//                          reduction(+:sum,sum_teams)

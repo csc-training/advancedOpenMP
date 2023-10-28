@@ -1,19 +1,30 @@
 !unverified
+function dotprod(B,C,n) result(sum)
+   real    :: B(n), C(n), sum
+   integer :: n, i
+   integer :: sum_teams = 0
+   integer :: got_teams = 0
+   sum       = 0.0e0
+  
+   !! TODO 1a: map B and C and scalars as "tofrom"
+   !! TODO 1b-c include reductions for sum and sum_teams.
+   !$omp  target teams num_teams(100) &
+   !$omp&              map...         &
+   !$omp&              reduction...
 
-function dotprod(B,C,N) result(sum)
-   real    :: B(N), C(N), sum
-   integer :: N, i
-   sum = 0.0e0
-!! TODO 1a-c map B and C, make scalars tofrom by default
-!!           and include a reduction if necessary
+   !$omp distribute simd reduction...
       do i = 1,N
          sum = sum + B(i) * C(i)
       end do
-end function
 
-! Note:  The variable sum is now mapped with tofrom from the defaultmap
-!  clause on the combined target teams construct, for correct 
-!  execution with 4.5 (and pre-4.5) compliant compilers. See Devices Intro.
+      sum_teams=sum_teams + 1
+      if(omp_get_team_num()==0) got_teams=omp_get_num_teams()
+
+      write(*,'("sum_teams= ",i4," got_teams=",i4," sum= ",f12.0,"  (n=",i12,")" )') &
+                 sum_teams,got_teams,sum,n
+   !$omp end target teams
+
+end function
 
 program main
    integer, parameter ::  N=1024*1024
@@ -23,7 +34,5 @@ program main
    do i=1,N;  B(i)=1.0e0; C(i)=1.0e0;  end do
 
    sum=dotprod(B,C,N)
-
-   print*,"N= ", N, ", sum= ",sum
 
 end program main
