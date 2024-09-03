@@ -7,14 +7,13 @@ lang:   en
 
 # Introduction to task based parallelism {.section}
 
-# `omp for/omp do` Worksharing 
+# Worksharing Review
 
-- Parallel regions are created by forking  TEAM OF THREADS.
-- Worksharing constructs are placed inside parallel regions.
-    - LOOP ITERATION ARE PARTITIONED
-    - DATA ENVIRONMENT
-    - IMPLIED BARRIERS
-    - work is assigned (implicitely) to the threads.
+- Parallel regions are created by forking  a team of threads.
+- `omp for/omp do`  constructs are placed inside parallel regions.
+    - The loop iterations are partitiioned
+    - Each thread has its own data enviroment.
+    - Program executions pauses until all threads reached the end of the parallel region .
 
 # Pros
 
@@ -30,11 +29,52 @@ lang:   en
 - The developer has less control over the execution order and the distribution of work compared to tasking.
    - There is only First In, First Out (FIFO) queue available,  i.e no dependencies.
 
+# `omp sections` 
+- Before OpenMP 3.0, the only way was using **sections** construct.
+ 
+
+
+<div class="column">
+```c
+#pragma omp parallel
+#pragma omp sections
+{
+    #pragma omp section  
+    {
+        foo_1(...); 
+    }
+    #pragma omp section  
+    {
+        foo_2(...); 
+    }
+}
+
+...
+```
+</div>
+<div class="column">
+```fortran
+!$omp parallel 
+!$omp sections
+
+    !$ omp section  
+
+        foo_1(...)
+
+    !$omp section  
+
+        foo_2(...)
+
+!$omp end sections
+!$omp end parallel 
+```
+</div>
+
 # Terminology 
 
- - A **task** is specific instance of *executable code* and *its data environment* that can scheduled for execution by threads.
+ - A **task** is specific instance of *executable code*, *its data environment* and *internal control variables*.
 
- - `#pragma omp for/!$omp do` create so-called **implicit task**s.
+ - `#pragma omp for/!$omp do` creates `OMP_NUM_THREADS` **implicit task**s.
 
 <div class="column">
 ```c
@@ -46,16 +86,54 @@ lang:   en
 <div class="column">
 ```fortran
 !$omp parallel do schedule(static)
- do i=1,n; foo(...,i); enddo
+  do i=1,n; foo(...,i); enddo
 !$omp end parallel do
 ```
 </div>
 
-- `OMP_NUM_THREADS` **implicit task**s will be created.
-    - each executing `foo(...,i)` for `i=thread_ibeg:thread_iend`.
+ - **Explicit task**s are tasks which not an **implicit task**s.
+    - They are created by user via constructs (task..).
+
+# Execution model
+
+ - Creates a parallel region which forks a team of threads. 
+ - Tasks can be created by a single thread or several.
+    - Each execution of a task construct generates a new task.
+ - Tasks can be nested. 
+ - Tasks may be executed *immediate*ly or can be *deffered*.
+    - The runtime decides when.
+ - All threads in the parallel region can execute tasks. 
 
 
- - **Explicit task** is a task not an implicit task.
+# Basic Tasking
+
+
+<div class="column">
+```c
+#pragma omp parallel 
+#pragma omp masked // or single
+while(condition){
+      #pragma omp task [clause[[,] clause]...]
+        foo(...,i);  
+    }
+
+
+  
+```
+</div>
+<div class="column">
+```fortran
+!$omp parallel 
+!$omp masked ! or single
+do while(condition)
+      !$omp task [clause[[,] clause]...]
+        foo(...,i);
+      !$omp end task
+enddo
+!$omp end masked
+!$omp end parallel
+```
+</div>
 
 # Summary
 
