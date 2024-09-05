@@ -108,15 +108,18 @@ lang:   en
 
  - **Explicit task**s are tasks which not an **implicit task**s.
     - They are created by user via constructs (task., taskloop, target task).
+      - Use **omp task [clause[[,] clause]...]** construct.
 
 # Execution model
 
- - Creates a parallel region which forks a team of threads. 
+ - Create a parallel region which forks a team of threads. 
+ 
  - Tasks can be created by a single thread or several.
     - Each execution of a task construct generates a new task.
  - Tasks can be nested. 
  - Tasks may be executed *immediate*ly or can be *deffered*.
     - The runtime decides when.
+ - Synchronisation between tasks is done via implicit or explicit barriers.
  - All threads in the parallel region can execute tasks. 
 
 
@@ -171,44 +174,153 @@ enddo
 - affinity(list)
 </div>
 
-# Data  Scoping
- - Local variables are private
- - Static and global variables are shared
- - *private* variables are inheriatated as *firsprivate*
+# Data environment of a task
+ - **Local variables are private**
+ - **Static and global variables are shared**
+ - *private* variables are inherited as *firsprivate*
  - *shared* attribute is inherited. 
- - *default(none)* requires each variablde to have an attribute
+ - *default(none)* requires each variable to have an attribute
 
-# Task Synchronization: **taskwait**
-
+# Tasks Synchronization: **taskwait**
 
 <div class="column">
 ```c
-#pragma omp parallel 
-#pragma omp masked // or single
-while(condition){
-      #pragma omp task [clause[[,] clause]...]
-        foo(...,i);  
-    }
+  #pragma omp parallel
+  #pragma omp single
+  {
+    #pragma omp task 
+    modify_data(X) // Task A
+    #pragma omp task 
+    modify_data(Y) // Task B
 
+    #pragma omp taskwait //The execution pauses here
 
-  
+    #pragma omp task 
+    print_results(X) // Task C
+
+    #pragma omp task 
+    print_results(Y) // Task D
+}
 ```
 </div>
 <div class="column">
 ```fortran
-!$omp parallel 
-!$omp masked ! or single
-do while(condition)
-      !$omp task [clause[[,] clause]...]
-        foo(...,i);
-      !$omp end task
-enddo
-!$omp end masked
-!$omp end parallel
+  !$omp parallel
+  !$omp single
+    !$omp task 
+        modify_data(X) ! Task A
+    !$omp end task
+    !$omp task 
+        modify_data(Y) ! Task B
+    !$omp end task
+    !$omp taskwait ! The execution pauses here
+    !$omp task 
+        print_results(X) ! Task C
+    !$omp end task
+    !$omp task 
+        print_results(Y) // Task D
+    !$omp end task
+    ...
 ```
 </div>
 
 
+# Recursive algorithms with tasks
+
+- A task can itself generate new tasks
+    - Useful when parallelising recursive algorithms
+- Recursive algorithm for Fibonacci numbers:
+  $F_0=0, \quad F_1=1, \quad F_n = F_{n-1} + F_{n-2}$
+
+<div class=column>
+```c
+#pragma omp parallel
+{
+    #pragma omp single
+    fib(10);
+}
+```
+</div>
+
+<div class=column>
+```c
+int fib(int n) {
+    int fn, fnm;
+    if (n < 2)
+        return n;
+    #pragma omp task shared(fn)
+    fn = fib(n-1);
+    #pragma omp task shared(fnm)
+    fnm = fib(n-2);
+    #pragma omp taskwait
+    return fn+fnm;
+}
+```
+</div>
+
+# Tasking illustrated
+
+<div class=column>
+- Thread 1 enters `fib(4)`
+</div>
+
+<div class=column>
+![](img/fibonacci1.png){.center width=90%}
+</div>
+
+# Tasking illustrated
+
+<div class=column>
+- Thread 1 enters `fib(4)`
+- Thread 1 creates tasks for `fib(3)` and `fib(2)`
+</div>
+
+<div class=column>
+![](img/fibonacci2.png){.center width=90%}
+</div>
+
+# Tasking illustrated
+
+<div class=column>
+- Thread 1 enters `fib(4)`
+- Thread 1 creates tasks for `fib(3)` and `fib(2)`
+- Threads 1 and 2 execute tasks from the queue and create four new tasks
+</div>
+
+<div class=column>
+![](img/fibonacci3.png){.center width=90%}
+</div>
+
+# Tasking illustrated
+
+<div class=column>
+- Thread 1 enters `fib(4)`
+- Thread 1 creates tasks for `fib(3)` and `fib(2)`
+- Threads 1 and 2 execute tasks from the queue and create four new tasks
+- Threads 1-4 execute tasks
+</div>
+
+<div class=column>
+![](img/fibonacci4.png){.center width=90%}
+</div>
+
+# Tasking illustrated
+
+<div class=column>
+- Thread 1 enters `fib(4)`
+- Thread 1 creates tasks for `fib(3)` and `fib(2)`
+- Threads 1 and 2 execute tasks from the queue and create four new tasks
+- Threads 1-4 execute tasks
+- ...
+</div>
+
+<div class=column>
+![](img/fibonacci5.png){.center width=90%}
+</div>
+
 # Summary
 
-- OpenMP tasks
+ - Worksharing with `omp for/omp do` is simple and fast, but not suitable  recursive algorithms  or irregular parallelism.
+ - Tasks are independent units of work with their own data environments. Implicit tasks are created by parallel loops, while explicit tasks are user-defined.
+ - Tasks can be executed immediately or deferred. Synchronization is via implicit or explicit barries (**taskwait**).
+ - Brute force Fibonacci series calculation.
