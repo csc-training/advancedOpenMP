@@ -171,6 +171,42 @@ enddo
 - affinity(list)
 </div>
 
+# Data  Scoping
+ - Local variables are private
+ - Static and global variables are shared
+ - *private* variables are inheriatated as *firsprivate*
+ - *shared* attribute is inherited. 
+
+# Task Synchronization: **taskwait**
+
+
+<div class="column">
+```c
+#pragma omp parallel 
+#pragma omp masked // or single
+while(condition){
+      #pragma omp task [clause[[,] clause]...]
+        foo(...,i);  
+    }
+
+
+  
+```
+</div>
+<div class="column">
+```fortran
+!$omp parallel 
+!$omp masked ! or single
+do while(condition)
+      !$omp task [clause[[,] clause]...]
+        foo(...,i);
+      !$omp end task
+enddo
+!$omp end masked
+!$omp end parallel
+```
+</div>
+
 
 # Summary
 
