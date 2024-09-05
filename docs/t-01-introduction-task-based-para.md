@@ -176,6 +176,7 @@ enddo
  - Static and global variables are shared
  - *private* variables are inheriatated as *firsprivate*
  - *shared* attribute is inherited. 
+ - *default(none)* requires each variablde to have an attribute
 
 # Task Synchronization: **taskwait**
 

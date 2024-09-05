@@ -8,11 +8,11 @@ void foo()
         #pragma omp task
         {
             int e=5;
-            // Scope of a: 
-            // Scope of b: 
-            // Scope of c: 
-            // Scope of d: 
-            // Scope of e: 
+            // Scope of a:                  value of a:
+            // Scope of b:                  value of b: 
+            // Scope of c:                  value of c:
+            // Scope of d:                  value of d: 
+            // Scope of e:                  value of e: 
         }
     }
 }
