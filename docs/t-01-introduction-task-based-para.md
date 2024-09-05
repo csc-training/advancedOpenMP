@@ -11,9 +11,24 @@ lang:   en
 
 - Parallel regions are created by forking  a team of threads.
 - `omp for/omp do`  constructs are placed inside parallel regions.
-    - The loop iterations are partitiioned
+    - The loop iterations are partitioned.
     - Each thread has its own data enviroment.
     - Program executions pauses until all threads reached the end of the parallel region .
+
+
+<div class="column">
+```c
+#pragma omp parallel for schedule(static)
+ {for(i=0;i<n;i++) 
+      foo(...,i);}
+```
+</div>
+<div class="column">
+```fortran
+!$omp parallel do schedule(static)
+  do i=1,n; foo(...,i); enddo
+!$omp end parallel do
+```
 
 # Pros
 
@@ -72,7 +87,7 @@ lang:   en
 
 # Terminology 
 
- - A **task** is specific instance of *executable code*, *its data environment* and *internal control variables*.
+ - A **task** is specific instance of *executable code*, *its data environment*.
 
  - `#pragma omp for/!$omp do` creates `OMP_NUM_THREADS` **implicit task**s.
 
@@ -92,7 +107,7 @@ lang:   en
 </div>
 
  - **Explicit task**s are tasks which not an **implicit task**s.
-    - They are created by user via constructs (task..).
+    - They are created by user via constructs (task., taskloop, target task).
 
 # Execution model
 
@@ -134,6 +149,28 @@ enddo
 !$omp end parallel
 ```
 </div>
+
+# Task clauses
+
+<div class="column">
+ - private(list)
+ - firstprivate(list)
+ - shared(list)
+ - default(shared|none)
+ - in-reduction(red-op:list)
+ - allocate([allocator:]:list)
+ - detach(event-handler)
+</div>
+<div class="column">
+- if(expression)
+- mergeable
+- final(scalar-expression)
+- depend(dep-type:list)
+- untied
+- priority(value)
+- affinity(list)
+</div>
+
 
 # Summary
 
