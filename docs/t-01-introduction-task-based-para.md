@@ -72,7 +72,7 @@ lang:   en
 !$omp parallel 
 !$omp sections
 
-    !$ omp section  
+    !$omp section  
 
         foo_1(...)
 
@@ -107,7 +107,7 @@ lang:   en
 </div>
 
  - **Explicit task**s are tasks which not an **implicit task**s.
-    - They are created by user via constructs (task., taskloop, target task).
+    - They are created by user via constructs (task, taskloop, target task).
       - Use **omp task [clause[[,] clause]...]** construct.
 
 # Execution model
@@ -182,8 +182,10 @@ enddo
  - *default(none)* requires each variable to have an attribute
 
 # Tasks Synchronization: **taskwait**
-
+ - Execution of the task pauses until the completion of child tasks of the current task (just direct children, not all descendant tasks).
+ 
 <div class="column">
+<small>
 ```c
   #pragma omp parallel
   #pragma omp single
@@ -202,8 +204,10 @@ enddo
     print_results(Y) // Task D
 }
 ```
+</small>
 </div>
 <div class="column">
+<small>
 ```fortran
   !$omp parallel
   !$omp single
@@ -222,6 +226,7 @@ enddo
     !$omp end task
     ...
 ```
+</small>
 </div>
 
 
