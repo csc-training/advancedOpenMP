@@ -1,5 +1,0 @@
-    unset OMP_PROC_BIND
-    unset OMP_PLACES
-    unset OMP_DISPLAY_ENV
-
-    export OMP_NUM_THREADS=56
