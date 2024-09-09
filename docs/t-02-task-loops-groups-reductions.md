@@ -8,7 +8,6 @@ lang:   en
 # Advanced Tasking Strategies {.section}
 
 
-
 # Tasks 
 
  - Pros
@@ -109,7 +108,7 @@ enddo
 ```
 </div>
 
-- The tasks are part of an implicit taskgroup region (unless *nogroup* is specified). 
+- The tasks are part of an **implicit taskgroup** region (unless *nogroup* is specified). 
 - The order of the creation of the loop tasks is unspecified. 
 - Each thread encountering **taskloop** will a create set of tasks.
 
@@ -193,14 +192,35 @@ enddo
 
 ![](img/tyskwvstskgr.png){.center width=84%}
 
+# Taskgroup ft. Taskloop
+```c
+void parallel_work(){
+
+    #pragma omp taskgroup{
+        #pragma omp task
+        long_running_task();
+
+        #pragma omp taskloop private(j) grainsize(1000) nogroup
+        for (int i=0; i< 100000; i++){
+            for(int j=0;j<i, j++){
+                loop_work(i,j);
+            }
+        }
+
+        #pragma omp task 
+        some_other_work();
+    }
+}
+```
+
 # Reduction operations using tasks
 - The reduction is an operations in which the elements of an array are aggregated in a single value through a binary operation. 
 - The operation needs to be associative and commutative. 
 
-- In OpenMP reductions can be done over *parallel* regions or *taskgroup* regions.
-- The tasks involved in the reduction use the **in_reduction(op: list)** clause
+- In OpenMP reductions can be done for only *explicit* or only *implicit* tasks, or both.
+- The *explicit* tasks involved in the reduction use the **in_reduction(op: list)** clause.
 
-# Task reductions (within taskgroup)
+# Task reductions (within taskgroup region)
  - The **taskgroup** construct has only one clause **task_reduction(op: list)** 
  
 <small>
@@ -213,15 +233,43 @@ node_t* node = NULL;
     #pragma omp single
     {
         #pragma omp taskgroup task_reduction(+: res)
-        { // [1]
+        { 
             while (node) {
                 #pragma omp task in_reduction(+: res) firstprivate(node)
-                { // [2]
+                { 
                     res += node->value;
                 }
                 node = node->next;
             }
-        } // [3]
+        } 
+    }
+}
+``` 
+</small>
+
+# Task reductions over  *explicit* and *implicit* tasks.
+ - Reductions can involve both *explicit* and *implicit* tasks.
+ - The **reduction** clause have been extended
+ 
+<small>
+```
+int res = 0;
+node_t* node = NULL;
+...
+#pragma omp parallel reduction(task,+:res)
+{
+    #pragma omp single
+    {
+        #pragma omp taskgroup task_reduction(+: res)
+        { 
+            while (node) {
+                #pragma omp task in_reduction(+: res) firstprivate(node)
+                { 
+                    res += node->value;
+                }
+                node = node->next;
+            }
+        } 
     }
 }
 ``` 
