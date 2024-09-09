@@ -1,3 +1,18 @@
+# Advanced OpenMP - tasks and GPU offloading
+
+Material for the CSC course "Advanced OpenMP - tasks and GPU offloading".
+The most recent version of the course is found in the `main` branch, previous versions can be found in Releases/Tags.
+
+Learning outcome
+- Awareness of task based parallelism
+- Ability to implement task parallel algorithms with OpenMP
+- Ability to utilize GPUs efficiently with OpenMP offloading
+
+Prerequisites
+- Good knowledge of C/C++ or Fortran
+- Basic knowledge of OpenMP for CPUs
+
+
 # GPU programming I-III: exercises
 
 ## Intro to GPUs in HPC
