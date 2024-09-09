@@ -278,4 +278,8 @@ node_t* node = NULL;
 
 # Summary
 
-- OpenMP tasks
+- OpenMP provides features to have codes  both efficient and clear.
+- **taskloop** construct simplifies task creation and helps avoid too fine task granularity.
+- **taskgroup** construct provides a way to coordinate specific groups of tasks
+- Reductions have been extended to include both only *explicit* or *implicit* tasks or both. 
+
