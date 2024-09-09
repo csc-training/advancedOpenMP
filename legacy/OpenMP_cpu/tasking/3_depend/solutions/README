@@ -1,0 +1,20 @@
+
+
+With a single thread the RAR will simply pull tasks
+off the queue in order (and x is set to 2 in the first task
+on the queue).
+
+With 2 threads, the ordering may be different, and there is
+a race condition.
+
+
+In the depend_all.c case there is a race condition.  
+Note that x is a shared variable, and is set to 1 before the 
+single construct by TWO threads.  One thread can set the
+value to one and execute the tasks, and the other thread
+can be delayed and set the x to 1 after the tasks are 
+executed, because there is no barrier before
+a single region (there is only one at the end of the single construct).
+
+The simple solution is to call a barrier immediately after
+setting x -- that will also flush the value to memory.

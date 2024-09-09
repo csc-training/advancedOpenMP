@@ -1,0 +1,16 @@
+iforolutions $ ifort ans_worksharing.f90 
+/tmp/ifortPGgpfh.o: in function `MAIN__':
+ans_worksharing.f90:(.text+0x5f): relocation truncated to fit: R_X86_64_PC32 against `.bss'
+ans_worksharing.f90:(.text+0x6d): relocation truncated to fit: R_X86_64_PC32 against `.bss'
+ans_worksharing.f90:(.text+0x96): relocation truncated to fit: R_X86_64_32S against `.bss'
+ans_worksharing.f90:(.text+0xb7): relocation truncated to fit: R_X86_64_PC32 against `.bss'
+ans_worksharing.f90:(.text+0xc3): relocation truncated to fit: R_X86_64_PC32 against `.bss'
+ans_worksharing.f90:(.text+0xce): relocation truncated to fit: R_X86_64_PC32 against `mod_timer_mp_start_$C16.0.3'
+ans_worksharing.f90:(.text+0xd5): relocation truncated to fit: R_X86_64_32S against `.bss'
+ans_worksharing.f90:(.text+0x117): relocation truncated to fit: R_X86_64_PC32 against `.bss'
+ans_worksharing.f90:(.text+0x142): relocation truncated to fit: R_X86_64_32S against `.bss'
+ans_worksharing.f90:(.text+0x1a7): relocation truncated to fit: R_X86_64_PC32 against `.bss'
+ans_worksharing.f90:(.text+0x2db): additional relocation overflows omitted from the output
+/opt/apps/gcc/8.3.0/bin/ld: failed to convert GOTPCREL relocation; relink with --no-relax ans_worksharing.f90
+
+

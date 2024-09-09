@@ -1,0 +1,74 @@
+* First experiment: 56 threads, 56 places, each place a core
+  ----------------
+    #unset OpenMP Affinity variables with the "unset" command.
+    #(they a probably set from the previous experiment)
+
+    unset OMP_PROC_BIND
+    unset OMP_PLACES
+    unset OMP_DISPLAY_ENV
+
+    export OMP_NUM_THREADS=56
+
+    amask_omp
+
+     1a.) Would it be appropriate to say that any thread can run anywhere? 
+
+        ->________________________  yes
+
+ Now, let's bind each thread to a single core.
+
+    export OMP_PLACES=cores
+
+    amask_omp
+
+    Note that each thread_number in the sequence 0, ... 55
+    is assigned to a unique numbered proc-id (core number).
+    (Unfortunately, Intel does not assign them sequentially.
+    For now, assume that cores are identical, and that it
+    therefore doesn't matter.)
+
+     2a.) Do you see a pattern?  yes (4 groups)  Does it make sense?____ no
+
+
+* Second experiment (optional):  Use 1/2 the threads (28) and spread out
+  -----------------
+
+     export OMP_NUM_THREADS=28
+     export OMP_PROC_BIND=spread
+
+     export OMP_PLACES=cores
+     amask_omp
+
+   2a.) Is the selection every-other one of the results in 1a. ? ____ yes
+
+  Now try this:
+     export OMP_PLACES='{0,2}:14:4,{1,3}:14:4'
+     amask_omp
+
+    2a.)  What is the difference between these approaches.
+          Does the explicit place list in the PLACE variable allow more floating?
+
+         ->  ---   pattern is easier to deal with if cores on a socekt are all the same.
+         ->  ---   There are more cores to "float" (execute) on for each thread.
+
+
+* third
+     set PLACES to cores and BIND to close for 28 threads:
+
+     export OMP_NUM_THREADS=28
+     export OMP_PROC_BIND=close
+     export OMP_PLACES=cores
+     amask_omp
+
+    Compared to 2a.) what has happened? ________________ All threads are close, on one socket.
+
+* fourth  experiment: experiment with options
+  ----------------
+
+Get amask general help
+Execute amask_omp  with -pf  (print fast)
+
+amask_omp --help
+amask_omp
+amask_omp  -pf
+

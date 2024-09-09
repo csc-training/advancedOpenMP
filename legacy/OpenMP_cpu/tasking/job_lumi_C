@@ -1,0 +1,15 @@
+#!/bin/bash -l
+#SBATCH -J tasking        # Job name
+#SBATCH -o %x.o%j         # Name of stdout & stderr file
+#SBATCH -p debug          # Partition (queue) name
+#SBATCH -N 1              # one node
+#SBATCH -n 1              # tasks
+#SBATHC --cpus-per-task=128  #cores per task
+#SBATCH -t 00:05:00       # Run time (hh:mm:ss)
+#SBATCH -A project_462000390  # Project account for billing
+#
+ml LUMI/23.03
+ml partition/C
+
+# ADD CORRECT PROJECT ABOVE
+  ./a.out

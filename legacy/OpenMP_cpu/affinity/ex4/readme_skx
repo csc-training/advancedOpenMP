@@ -1,0 +1,34 @@
+* First experiment: 2 MPI tasks, 24 threads per task
+  ----------------
+
+Exit your present idev session, and create a new one:
+
+      export OMP_NUM_THREADS=24
+      export OMP_PLACES=cores
+      export OMP_PROC_BIND=spread
+
+      ibrun -np 2 amask_hybrid
+
+   1a.) Note that a PURE MPI mask is reported
+        to that you can view the mask for each MPI rank.
+        The next list is for the hybrid execution-- it
+        shows the threads for each rank.
+
+        At the OpenMP fork, the affinity of the threads can
+        only be made from set bits of the parent MPI process.
+
+        How has each thread mask been modified from
+        the parent MPI rank's mask?
+
+       
+
+
+
+* Second experiment: change abstract name (OMP_PLACES) to threads
+  -----------------
+
+      export OMP_PLACES=threads
+
+      ibrun -np 2  amask_hybrid
+
+    2a.)  How many threads are on a core?

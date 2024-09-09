@@ -1,0 +1,33 @@
+   
+
+   What is the default Vectorization ~2 ______speedup
+   
+# Step 2
+
+   # Try collapsing the two loops and performing SIMD operations 
+   # with the simd directive using a collapse(2) clause.
+
+    SIMD and collapse outer loop:    ~0.1  ______speedup
+    Should one collapse the loops?    _________________
+    It is best not to collapse and then SIMDize.
+
+C Default:
+   remark #15476: scalar cost: 9
+   remark #15477: vector cost: 4.000 
+   remark #15478: estimated potential speedup: 2.250 
+
+C SIMD Collapse
+   remark #15476: scalar cost: 14
+   remark #15477: vector cost: 102.000 
+   remark #15478: estimated potential speedup: 0.130 
+  
+F DEFAULT:
+   remark #15476: scalar cost: 9 
+   remark #15477: vector cost: 4.500 
+   remark #15478: estimated potential speedup: 1.990 
+
+OUTER collapse
+   remark #15476: scalar cost: 15 
+   remark #15477: vector cost: 89.500 
+   remark #15478: estimated potential speedup: 0.160 
+ 

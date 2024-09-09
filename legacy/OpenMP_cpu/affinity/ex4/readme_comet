@@ -1,0 +1,46 @@
+HYBRID EXECUTION:
+
+* First experiment: 2 MPI tasks, 12 threads per process
+  ----------------
+
+Set up an environment for using 2 MPI tasks, with each
+MPI process have 12 threads.
+
+      export OMP_NUM_THREADS=12
+      export OMP_PLACES=cores
+
+      ibrun -np 2 amask_hybrid
+
+   1a.) Note that a PURE MPI mask is reported
+        so that you can view the mask for each MPI rank.
+        The next report is for the hybrid execution-- it
+        shows the threads for each rank.
+
+        At the OpenMP fork, the affinity of the threads can
+        only be made from set bits of the parent MPI process.
+
+        How has each thread mask been modified from
+        the parent MPI rank's mask?
+
+       
+
+
+
+* Second experiment: change abstract name (OMP_PLACES) to sockets
+  -----------------
+
+      export OMP_PLACES=sockets
+
+      ibrun -np 2 amask_hybrid
+
+    2a.)  Where can each thread execute?
+
+
+* Third Experiment:  What is the default (NON-OPENMP) affinity for this hybrid job:
+
+      unset OMP_PROC_BIND 
+      unset OMP_PLACES
+
+      ibrun -np 2 amask_hybrid
+
+    3a.)  Where can each thread execute? 

@@ -1,0 +1,91 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                          S u m m a r y   R e p o r t
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Compilation
+-----------
+File     : /pfs/lustrep2/users/kemilfeld/OpenMP_cpu/DEV/reduction/solutions/orig.f90
+Compiled : 10/05/23  14:15:56
+Compiler : Version 15.0.1
+Ftnlx    : Version 15.0.1 
+Target   : x86-64
+Command  : ftn_driver.exe -hcpu=x86-milan -haccel=host -hnetwork=ofi -hdynamic
+           -D__CRAY_X86_MILAN -D__CRAY_HOST -D__CRAYXT_COMPUTE_LINUX_TARGET
+           -fopenmp -c orig.f90 -hlist=m -O3
+           -I/opt/cray/pe/cce/15.0.1/cce-clang/x86_64/lib/clang/15.0.6/include
+           -I/opt/cray/pe/cce/15.0.1/cce/x86_64/include/craylibs -I/usr/include
+           -I/opt/cray/pe/mpich/8.1.25/ofi/cray/10.0/include
+           -I/opt/cray/pe/libsci/23.02.1.1/CRAY/9.0/x86_64/include
+           -I/opt/cray/pe/dsmml/0.2.2/dsmml//include
+           -I/opt/cray/xpmem/2.5.2-2.4_3.47__gd0f7936.shasta/include
+           -I/usr/include
+Program
+  Units  : RED_SUM
+
+ftnlx report
+------------
+Source   : /pfs/lustrep2/users/kemilfeld/OpenMP_cpu/DEV/reduction/solutions/orig.f90
+Date     : 10/05/2023  14:15:57
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                          S o u r c e   L i s t i n g
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+     %%%    L o o p m a r k   L e g e n d    %%%
+
+     Primary Loop Type        Modifiers
+     ------- ---- ----        ---------
+     A - Pattern matched      a - atomic memory operation
+                              b - blocked
+     C - Collapsed            c - conditional and/or computed
+     D - Deleted               
+     E - Cloned                
+     F - Flat - No calls      f - fused
+     G - Accelerated          g - partitioned
+     I - Inlined              i - interchanged
+     M - Multithreaded        m - partitioned
+                              n - non-blocking remote transfer
+                              p - partial
+     R - Rerolling            r - unrolled
+                              s - shortloop
+     V - Vectorized           w - unwound
+
+     + - More messages listed at end of listing
+     ------------------------------------------
+
+
+    1.         double precision function red_sum(n,a)
+    2.           integer          :: n
+    3.           double precision :: a(n)
+    4.           integer          :: i
+    5.         ! interface declares that this can be a "vector" function.
+    6.           interface
+    7.             double precision function fun(b)
+    8.               double precision  :: b
+    9.             end function fun
+   10.           end interface
+   11.               
+   12.           red_sum = 0.0d0
+   13.               
+   14.         !  Reduction here causes a dependence
+   15.         !  But SIMD units can now handle reductions!
+   16.           !$OMP SIMD reduction(+:red_sum) simdlen(2)
+   17.  + 1--<   do i = 1,n
+   18.  + 1         red_sum = red_sum + fun(a(i))
+   19.    1-->   enddo
+   20.         
+   21.         end function red_sum
+
+ftn-6287 ftn: VECTOR RED_SUM, File = orig.f90, Line = 17 
+  A loop starting at line 17 was not vectorized because it contains a call to function "fun" on line 18.
+
+ftn-3021 ftn: IPA RED_SUM, File = orig.f90, Line = 18 
+  "fun" was not inlined because the compiler was unable to locate the routine.
+
+   22.         
+   23.         !!https://software.intel.com/en-us/articles/openmp-40-new-features-supported-in-intel-compiler-160
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,0 +1,17 @@
+CC -fopenmp array_section.cpp
+
+array_section.cpp:16:31: error: expected ']'
+  #pragma omp target map(x[0:n:2]) map(y[0:n:2])
+                              ^
+array_section.cpp:16:27: note: to match this '['
+  #pragma omp target map(x[0:n:2]) map(y[0:n:2])
+                          ^
+array_section.cpp:16:45: error: expected ']'
+  #pragma omp target map(x[0:n:2]) map(y[0:n:2])
+                                            ^
+array_section.cpp:16:41: note: to match this '['
+  #pragma omp target map(x[0:n:2]) map(y[0:n:2])
+                                        ^
+2 errors generated.
+error: provided host compiler IR file '/tmp/array_section-aee154.bc' is required to generate code for OpenMP target regions but cannot be found
+

@@ -1,0 +1,45 @@
+Legend:
+
+  A - recognized idiom
+  D - deleted loop
+  I - callee inlined here
+  L - interleaved loop
+  M - multithreaded
+  P - peeled loop
+  S - distributed loop
+  U - completely unrolled loop
+  u - partially unrolled loop
+  V - vectorized loop
+  X - loop interchanged with enclosing loop
+  Z - versioned loop for LICM
+  + - additional messages below
+
+----------
+
+ 1.            #include <omp.h>
+ 2.            //double fun(double a);
+ 3.            double fun(double a){return a*a;}
+ 4.            
+ 5.            double red_sum(int n,double *a){
+ 6.              int i;
+ 7.              double red_sum=0.0e0;
+ 8.            
+ 9.            // Reduction here causes a dependence
+10.            // But SIMD units can now handle reductions!
+11. +   Vu--<>   #pragma omp simd reduction(+:red_sum)
+12.              for(i=0;i<n;i++){
+13. + I             red_sum = red_sum + fun(a[i]);
+14.              }
+15.              return red_sum;
+16.            }
+17.            
+18.            //https://software.intel.com/en-us/articles/openmp-40-new-features-supported-in-intel-compiler-160
+
+----------
+
+11. loop not distributed: memory operations are safe for vectorization
+11. loop not distributed: use -Rpass-analysis=loop-distribute for more info
+11. unrolled loop by a factor of 8 with run-time trip count
+11. vectorized loop (vectorization width: 4, interleaved count: 4)
+
+13. Cannot SLP vectorize list: vectorization was impossible with available vectorization factors
