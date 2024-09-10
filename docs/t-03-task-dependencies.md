@@ -113,4 +113,9 @@ lang:   en
   ``` 
 # Summary
 
-- OpenMP tasks
+- The **depend** clause gives information about the way a task will acess the data
+- Access mode can be **in**, **out**, and **inout**.
+  - **depend(in:x)**: task will read the variables **x**.
+  - **depend(out:y)**: task will write the variable **res**.
+  - **depend(inout:z)**: the task will both read and writethe variable **z**.
+- The execution of the task is decided by the OpenMP runtime dinamically, based on its dependencies. 

@@ -19,7 +19,7 @@ lang:   en
     - Creating and managing tasks at runtime incurs high overhead.
     - Task-based parallelism code is more complex.
 
-# Tasking use case: **saxpy** 
+# Tasking **saxpy** 
 
 <div class="column">
 ```c
@@ -108,9 +108,10 @@ enddo
 ```
 </div>
 
-- The tasks are part of an **implicit taskgroup** region (unless *nogroup* is specified). 
+- The tasks are part of an **implicit taskgroup**. 
 - The order of the creation of the loop tasks is unspecified. 
 - Each thread encountering **taskloop** will a create set of tasks.
+- **taskloop** can be combine with **simd**.
 
 # Tasksloop clauses
 
@@ -119,7 +120,8 @@ enddo
  - firstprivate(list)
  - shared(list)
  - default(sh|pr|fpr|none)
- - in-reduction(red-op:list)
+ - reduction(red-op:list)
+ - in_reduction(red-op:list)
  - grainsize(size)
  - num_tasks(num-tasks)
 </div>
@@ -133,6 +135,7 @@ enddo
 - nogroup
 - allocate([allocator:]:list)
 </div>
+
 
 # Task synchronization: **barrier**
  - `omp barrier` 
