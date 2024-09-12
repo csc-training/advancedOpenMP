@@ -191,7 +191,7 @@ enddo
 ``` 
 </small>
 
-# Taskgroup vs. Taskwait
+# Taskgroup vs. Taskwait. Directed Acyclic Graph (DAG)
 
 ![](img/tyskwvstskgr.png){.center width=84%}
 
