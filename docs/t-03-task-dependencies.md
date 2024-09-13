@@ -132,6 +132,7 @@ lang:   en
   - **depend(in:x)**: task will read the variables **x**.
   - **depend(out:y)**: task will write the variable **y**.
   - **depend(inout:z)**: the task will both read and write the variable **z**.
+  - supports variables `x`, array sections `w[10:20]`, and iterators `depend(iterator(j=0:n), in : list[j])`.
 
 # Tasks dependencies mutexinoutset
 
