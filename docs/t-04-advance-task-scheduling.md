@@ -164,6 +164,7 @@ by the same thread.
  - The **untied** clause indicates that after suspension the task can moved to another thread if it is beneficial.
  - Thread based features: *thread-id*, *threadprivate*, ... should not be used.
  - Unfortunately not alll implementtions obey this.
+
 # Task Scheduling Points
  - A program may generate so many tasks that the internal data structures managing tasks overflow.
  - Task switching can only occur at Task Scheduling Points (TSP). 
@@ -215,6 +216,8 @@ void foo(omp_lock_t * lock, int n)
 }
 ``` 
 </div>
+
+
 # Summary
  - **Cut-off strategies**: 
     - **task** clauses **if**, **final**, **meargeable**.
